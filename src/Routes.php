@@ -16,11 +16,15 @@ use CoffeeCode\Router\Router;
 abstract class Routes
 {
     /**
+     * Router Object
+     *
      * @var Router
      */
     private $_router;
     
     /**
+     * Controller name
+     *
      * @var string
      */
     private $_controller;
@@ -29,8 +33,8 @@ abstract class Routes
     /**
      * Routes constructor.
      *
-     * @param Router $router
-     * @param string $className
+     * @param Router $router    Router object
+     * @param string $className Child class name
      */
     public function __construct(Router $router, string $className)
     {
@@ -41,6 +45,8 @@ abstract class Routes
     }
     
     /**
+     * Update router object
+     *
      * @return Router
      */
     public function updateRouter(): Router
@@ -49,7 +55,9 @@ abstract class Routes
     }
     
     /**
-     * @param string|null $ns
+     * Modify the defined namespace
+     *
+     * @param string|null $ns New namespace
      *
      * @return Routes
      */
@@ -60,7 +68,9 @@ abstract class Routes
     }
     
     /**
-     * @param string|null $group
+     * Define a routes group
+     *
+     * @param string|null $group Name of the group
      *
      * @return Router
      */
@@ -71,8 +81,10 @@ abstract class Routes
     }
     
     /**
-     * @param string $route
-     * @param string $name
+     * Define a method get route
+     *
+     * @param string $route Route
+     * @param string $name  Nickname to the route
      *
      * @return void
      */
@@ -87,8 +99,10 @@ abstract class Routes
     }
     
     /**
-     * @param string $route
-     * @param string $name
+     * Define a method post route
+     *
+     * @param string $route Route
+     * @param string $name  Nickname to the route
      *
      * @return void
      */
@@ -103,8 +117,10 @@ abstract class Routes
     }
     
     /**
-     * @param string $route
-     * @param string $name
+     * Define a method put route
+     *
+     * @param string $route Route
+     * @param string $name  Nickname to the route
      *
      * @return void
      */
@@ -119,8 +135,10 @@ abstract class Routes
     }
     
     /**
-     * @param string $route
-     * @param string $name
+     * Define a method delete route
+     *
+     * @param string $route Route
+     * @param string $name  Nickname to the route
      *
      * @return void
      */
@@ -135,7 +153,9 @@ abstract class Routes
     }
     
     /**
-     * @param string $name
+     * Get handler for the route
+     *
+     * @param string $name Nickname of the route
      *
      * @return string
      */
@@ -146,7 +166,9 @@ abstract class Routes
     }
     
     /**
-     * @param string $name
+     * Get name for the route
+     *
+     * @param string $name Nickname of the route
      *
      * @return string
      */
