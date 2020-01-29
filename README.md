@@ -10,7 +10,8 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/thallesdella/factory-router.svg?style=flat-square)](https://packagist.org/packages/thallesdella/factory-router)
 
 
-Entregas Library vem na intenção de facilitar a consulta de serviços relacionados a entregas, como consulta de CEP, calculo de frete... 
+Factory Router é um componente simples, que te ajuda na criação das rotas do seu sistema. Utilizando o motor de rotas
+ Router, ele roteia o gerenciamento das rotas para alguma classe a sua escolha. 
 
 
 ### Destaques
@@ -21,10 +22,10 @@ Entregas Library vem na intenção de facilitar a consulta de serviços relacion
 
 ## Instalação
 
-Gate Keeper esta disponível atraves do composer:
+Factory Router esta disponível atraves do composer:
 
 ```bash
-"thallesdella/factory-router": "^1.0"
+"thallesdella/factory-router": "^1.2"
 ```
 
 Ou execute
@@ -35,7 +36,175 @@ composer require thallesdella/factory-router
 
 ## Documentação
 
-Para mais detalhes sobre como usar, veja uma pasta de exemplo no diretório do componente. Nela terá um exemplo de uso para cada método. Ela funciona assim:
+### Construindo objeto
+
+* **FactoryRouter::class**(string **$projectUrl**, string **$namespace**)
+
+    * **$projectUrl**: Url base do projeto
+    * **$namespace**: Namespace padrão dos controllers
+    
+```php
+$factory = new FactoryRouter('http://exemple.com.br', 'Source\Controllers');
+```
+
+_OBS: O namespace pode ser alterado durante a execução._
+
+### Adicionando arquivo ou pasta
+
+* **FactoryRouter::addFile**(string **$file**): _**FactoryRouter**_
+
+    * **$file**: Url base do projeto
+    
+```php
+$factory = new FactoryRouter('http://exemple.com.br', 'Source\Controllers');
+
+try{
+    $factory->addFile('widgets/cart/routes.php');
+} catch (ClassNotFoundException $e){
+ 
+} catch (UpdateRouterMissingMethodException $e){
+   
+} catch (FileNotFoundException $e){
+    
+}
+```
+
+* **FactoryRouter::addDir**(string **$dir**): _**FactoryRouter**_
+
+    * **$dir**: Url base do projeto
+    
+```php
+$factory = new FactoryRouter('http://exemple.com.br', 'Source\Controllers');
+
+try{
+    $factory->addDir('routes');
+} catch (ClassNotFoundException $e){
+ 
+} catch (UpdateRouterMissingMethodException $e){
+  
+} catch (DirectoryNotFoundException $e){
+   
+} catch (FileNotFoundException $e){
+    
+}
+```
+
+### Obtendo objeto Router
+
+* **FactoryRouter::build**(): _**Router**_
+
+```php
+$factory = new FactoryRouter('http://exemple.com.br', 'Source\Controllers');
+
+try{
+    $factory->addDir('routes');
+} catch (ClassNotFoundException $e){
+ 
+} catch (UpdateRouterMissingMethodException $e){
+  
+} catch (DirectoryNotFoundException $e){
+   
+} catch (FileNotFoundException $e){
+    
+}
+
+$router = $factory->build();
+```
+
+### Criando uma classe gerente do Router
+
+Crie uma classe e extenda ela a classe Routes
+
+* **Routes::class**(Router $router, string $className)
+
+    * **$router**: objeto Router
+    * **$className**: Nome da classe filha
+
+* **Routes::updateRouter**(): _**Router**_
+
+* **Routes::namespace**(?string **$ns**): _**Routes**_
+
+    * **$ns**: Novo namespace
+
+* **Routes::group**(?string **$group**): _**Router**_
+
+    * **$group**: Nome do grupo
+
+* **Routes::get**(string **$route**, string **$name**)
+
+    * **$route**: Rota
+    * **$name**: Apelido para a rota
+
+* **Routes::post**(string **$route**, string **$name**)
+
+    * **$route**: Rota
+    * **$name**: Apelido para a rota
+
+* **Routes::put**(string **$route**, string **$name**)
+
+    * **$route**: Rota
+    * **$name**: Apelido para a rota
+
+* **Routes::delete**(string **$route**, string **$name**)
+
+    * **$route**: Rota
+    * **$name**: Apelido para a rota
+
+```php
+namespace Routes\
+
+use ThallesDella\Routes
+
+class Blog extends Routes
+{
+    public function __construct(Router $router)
+    {
+        parent::__construct($router, __CLASS__);
+    }
+    
+    public function updateRouter(): Router
+    {
+        $this->web();
+        $this->categories();
+        $this->posts();
+        $this->user();
+        return parent::updateRouter();
+    }
+    
+    private function web(): void
+    {
+        $this->group(null);
+        $this->get("/", "home");
+        $this->get("/{search}", "search");
+        $this->get("/contato", "contact");
+    }
+    
+    private function categories(): void
+    {
+        $this->group('cat');
+        $this->get("/", "categories");
+        $this->get("/{cat_name}", "category");
+    }
+    
+    private function posts(): void
+    {
+        $this->group('posts');
+        $this->get("/", "posts");
+        $this->get("/{post_name}", "post");
+    }
+    
+    private function user(): void
+    {
+        $this->group('me');
+        $this->get("/", "login");
+        $this->get("/registrar", "register");
+        $this->get("/recuperar", "forget");
+        $this->get("/resetar", "reset");
+    }
+}
+```
+
+Para mais detalhes sobre como usar, veja na pasta de exemplos no diretório do componente. 
 
 ## Contribuindo
 
