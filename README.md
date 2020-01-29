@@ -11,7 +11,7 @@
 
 
 Factory Router é um componente simples, que te ajuda na criação das rotas do seu sistema. Utilizando o motor de rotas
- Router, ele roteia o gerenciamento das rotas para alguma classe a sua escolha. 
+ [Router](https://github.com/robsonvleite/router), ele roteia o gerenciamento das rotas para alguma classe a sua escolha. 
 
 
 ### Destaques
@@ -111,7 +111,7 @@ try{
 $router = $factory->build();
 ```
 
-### Criando uma classe gerente do Router
+## Criando uma classe gerente do Router
 
 Crie uma classe e extenda ela a classe Routes
 
