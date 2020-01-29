@@ -3,7 +3,11 @@
   "description": "Model of component for composer",
   "keywords": [
     "component",
-    "composer"
+    "composer",
+    "factory router",
+    "router",
+    "coffeecode",
+    "addon"
   ],
   "homepage": "http://www.bunana.com.br",
   "license": "MIT",
