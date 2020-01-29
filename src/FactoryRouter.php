@@ -32,15 +32,13 @@ class FactoryRouter
     /**
      * FactoryRouter constructor.
      *
-     * @param string      $projectUrl
-     * @param string|null $namespace
+     * @param string $projectUrl
+     * @param string $namespace
      */
-    public function __construct(string $projectUrl, string $namespace = null)
+    public function __construct(string $projectUrl, string $namespace)
     {
         $this->router = new Router($projectUrl);
-        
-        $ns = (!empty($namespace) ? $namespace : "Source\Controllers");
-        $this->router->namespace($ns);
+        $this->router->namespace($namespace);
         
         $this->target = [];
     }
@@ -76,7 +74,7 @@ class FactoryRouter
     }
     
     /**
-     * @param string $path
+     * @param string $file
      *
      * @return FactoryRouter
      *
@@ -84,12 +82,12 @@ class FactoryRouter
      * @throws FileNotFoundException
      * @throws UpdateRouterMissingMethodException
      */
-    public function addFile(string $path): FactoryRouter
+    public function addFile(string $file): FactoryRouter
     {
         $fileInfo = [
-            "filename" => $this->_getFileName($path),
-            "handler" => $this->_pathToNamespace($path),
-            "path" => dirname(__DIR__, 2) . "/{$path}"
+            "filename" => $this->_getFileName($file),
+            "handler" => $this->_pathToNamespace($file),
+            "path" => dirname(__DIR__, 2) . "/{$file}"
         ];
         
         if (!file_exists($fileInfo['path']) || !is_file($fileInfo['path'])) {
