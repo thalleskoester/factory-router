@@ -2,6 +2,7 @@
 
 namespace ThallesDella\FactoryRouter;
 
+use ArrayObject;
 use CoffeeCode\Router\Router;
 use ThallesDella\FactoryRouter\Exceptions\ClassNotFoundException;
 use ThallesDella\FactoryRouter\Exceptions\DirectoryNotFoundException;
@@ -20,31 +21,37 @@ use ThallesDella\FactoryRouter\Exceptions\UpdateRouterMissingMethodException;
 class FactoryRouter
 {
     /**
+     * Router object
+     *
      * @var Router
      */
-    private $router;
+    private $_router;
     
     /**
-     * @var array
+     * Target ArrayObject
+     *
+     * @var ArrayObject
      */
-    private $target;
+    private $_target;
     
     /**
      * FactoryRouter constructor.
      *
-     * @param string $projectUrl
-     * @param string $namespace
+     * @param string $projectUrl Base url of project
+     * @param string $namespace  Default namespace of the controllers
      */
     public function __construct(string $projectUrl, string $namespace)
     {
-        $this->router = new Router($projectUrl);
-        $this->router->namespace($namespace);
+        $this->_router = new Router($projectUrl);
+        $this->_router->namespace($namespace);
         
-        $this->target = [];
+        $this->_target = new ArrayObject();
     }
     
     /**
-     * @param string $dir
+     * Scan directory for targets
+     *
+     * @param string $dir Relative path of directory
      *
      * @return FactoryRouter
      *
@@ -74,7 +81,9 @@ class FactoryRouter
     }
     
     /**
-     * @param string $file
+     * Add file as target
+     *
+     * @param string $file Relative path of file
      *
      * @return FactoryRouter
      *
@@ -84,58 +93,65 @@ class FactoryRouter
      */
     public function addFile(string $file): FactoryRouter
     {
-        $fileInfo = [
+        $arr = [
             "filename" => $this->_getFileName($file),
             "handler" => $this->_pathToNamespace($file),
             "path" => dirname(__DIR__, 2) . "/{$file}"
         ];
+        $fileInfo = new ArrayObject($arr, ArrayObject::ARRAY_AS_PROPS);
         
-        if (!file_exists($fileInfo['path']) || !is_file($fileInfo['path'])) {
+        if (!file_exists($fileInfo->path) || !is_file($fileInfo->path)) {
             $error = new FileNotFoundException('File not found');
-            $error->file = $fileInfo['filename'];
+            $error->file = $fileInfo->filename;
             throw $error;
         }
-        include_once $fileInfo['path'];
+        include_once $fileInfo->path;
         
         $this->_checkClass($fileInfo);
-        $this->target = array_merge($this->target, [$fileInfo]);
+        $this->_target->append([$fileInfo]);
         return $this;
     }
     
     /**
+     * Build router
+     *
      * @return Router
      */
     public function build(): Router
     {
-        foreach ($this->target as $file) {
+        foreach ($this->_target->getIterator() as $file) {
             /**
+             * Instance of the router manager
+             *
              * @var Routes $routes
              */
-            $routes = new $file['handler']($this->router);
+            $routes = new $file->handler($this->_router);
             $routes->updateRouter();
         }
-        return $this->router;
+        return $this->_router;
     }
     
     /**
-     * @param array $fileInfo
+     * Check if is a valid class
+     *
+     * @param ArrayObject $fileInfo ArrayObject containing file's information
      *
      * @return void
      *
      * @throws ClassNotFoundException
      * @throws UpdateRouterMissingMethodException
      */
-    private function _checkClass(array $fileInfo): void
+    private function _checkClass(ArrayObject $fileInfo): void
     {
-        if (!class_exists($fileInfo['handler'])) {
+        if (!class_exists($fileInfo->handler)) {
             $error = new ClassNotFoundException("Class not found");
-            $error->file = $fileInfo['filename'];
+            $error->file = $fileInfo->filename;
             throw $error;
         }
         
-        if (!method_exists($fileInfo['handler'], 'updateRouter')) {
+        if (!method_exists($fileInfo->handler, 'updateRouter')) {
             $error = new UpdateRouterMissingMethodException("Method updateRouter not found");
-            $error->file = $fileInfo['filename'];
+            $error->file = $fileInfo->filename;
             throw $error;
         }
         
@@ -143,7 +159,9 @@ class FactoryRouter
     }
     
     /**
-     * @param string $path
+     * Converts a path to a file into the file's namespace
+     *
+     * @param string $path Path to be transform
      *
      * @return string
      */
@@ -154,7 +172,9 @@ class FactoryRouter
     }
     
     /**
-     * @param string $path
+     * Get the file name, without extension
+     *
+     * @param string $path Path of file
      *
      * @return string
      */
