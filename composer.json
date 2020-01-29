@@ -1,5 +1,5 @@
 {
-  "name": "thallesdella/project",
+  "name": "thallesdella/factory-router",
   "description": "Model of component for composer",
   "keywords": [
     "component",
@@ -16,7 +16,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "ThallesDella\\Project\\": "src"
+      "ThallesDella\\FactoryRouter\\": "src"
     }
   },
   "scripts": {
