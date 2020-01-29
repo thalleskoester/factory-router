@@ -32,7 +32,7 @@ abstract class Routes
      * @param Router $router
      * @param string $className
      */
-    public function __construct(Router &$router, string $className)
+    public function __construct(Router $router, string $className)
     {
         $this->_router = $router;
         
@@ -46,6 +46,17 @@ abstract class Routes
     public function updateRouter(): Router
     {
         return $this->_router;
+    }
+    
+    /**
+     * @param string|null $ns
+     *
+     * @return Routes
+     */
+    public function namespace(?string $ns): Routes
+    {
+        $this->_router->namespace($ns);
+        return $this;
     }
     
     /**
@@ -67,7 +78,11 @@ abstract class Routes
      */
     public function get(string $route, string $name): void
     {
-        $this->_router->get($route, $this->getHandler($name), $this->getName($name));
+        $this->_router->get(
+            $route,
+            $this->_getHandler($name),
+            $this->_getName($name)
+        );
         return;
     }
     
@@ -79,7 +94,11 @@ abstract class Routes
      */
     public function post(string $route, string $name): void
     {
-        $this->_router->post($route, $this->getHandler($name), $this->getName($name));
+        $this->_router->post(
+            $route,
+            $this->_getHandler($name),
+            $this->_getName($name)
+        );
         return;
     }
     
@@ -91,7 +110,11 @@ abstract class Routes
      */
     public function put(string $route, string $name): void
     {
-        $this->_router->put($route, $this->getHandler($name), $this->getName($name));
+        $this->_router->put(
+            $route,
+            $this->_getHandler($name),
+            $this->_getName($name)
+        );
         return;
     }
     
@@ -103,7 +126,11 @@ abstract class Routes
      */
     public function delete(string $route, string $name): void
     {
-        $this->_router->delete($route, $this->getHandler($name), $this->getName($name));
+        $this->_router->delete(
+            $route,
+            $this->_getHandler($name),
+            $this->_getName($name)
+        );
         return;
     }
     
@@ -112,7 +139,7 @@ abstract class Routes
      *
      * @return string
      */
-    public function getHandler(string $name): string
+    private function _getHandler(string $name): string
     {
         $controller = ucfirst($this->_controller);
         return "{$controller}:{$name}";
@@ -123,7 +150,7 @@ abstract class Routes
      *
      * @return string
      */
-    public function getName(string $name): string
+    private function _getName(string $name): string
     {
         $controller = strtolower($this->_controller);
         return "{$controller}.{$name}";
