@@ -120,7 +120,7 @@ class FactoryRouter
         include_once $fileInfo->path;
     
         $this->checkClass($fileInfo);
-        $this->target->append([$fileInfo]);
+        $this->target->append($fileInfo);
         return $this;
     }
     
@@ -131,13 +131,13 @@ class FactoryRouter
      */
     public function build(): Router
     {
-        foreach ($this->target->getIterator() as $file) {
+        foreach ($this->target->getIterator() as $fileInfo) {
             /**
              * Instance of the router manager
              *
              * @var Routes $routes
              */
-            $routes = new $file->handler($this->router);
+            $routes = new $fileInfo->handler($this->router);
             $routes->updateRouter();
         }
         return $this->router;
