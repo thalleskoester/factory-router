@@ -28,7 +28,7 @@ class Website extends Controller
     /**
      * @return void
      */
-    public function home(?array $data): void
+    public function home(): void
     {
         $action = $this->router->route('website.login');
         $html = "<a title='Fazer Login' href='{$action}'>Fazer Login</a>";
