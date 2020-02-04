@@ -51,11 +51,11 @@ _OBS: O namespace pode ser alterado durante a execução._
 
 * **FactoryRouter::addFile**(string **$file**): _**FactoryRouter**_
 
-    * **$file**: Url base do projeto
+    * **$file**: Caminho do arquivo referente a raiz do projeto
 
 * **FactoryRouter::addDir**(string **$dir**): _**FactoryRouter**_
 
-    * **$dir**: Url base do projeto
+    * **$dir**: Caminho do diretório referente a raiz do projeto
 
 #### Obtendo objeto Router
 
@@ -63,10 +63,10 @@ _OBS: O namespace pode ser alterado durante a execução._
 
 ### Routes
 
-* **Routes::class**(Router $router, string $className)
+* **Routes::class**(Router **$router**, string **$controllerName**)
 
     * **$router**: objeto Router
-    * **$className**: Nome da classe filha
+    * **$controllerName**: Nome do controller
 
 * **Routes::namespace**(?string **$ns**): _**Routes**_
 
@@ -78,22 +78,22 @@ _OBS: O namespace pode ser alterado durante a execução._
 
 * **Routes::get**(string **$route**, string **$name**): _**void**_
 
-    * **$route**: Rota
+    * **$route**: Caminho da rota
     * **$name**: Apelido para a rota
 
 * **Routes::post**(string **$route**, string **$name**): _**void**_
 
-    * **$route**: Rota
+    * **$route**: Caminho da rota
     * **$name**: Apelido para a rota
 
 * **Routes::put**(string **$route**, string **$name**): _**void**_
 
-    * **$route**: Rota
+    * **$route**: Caminho da rota
     * **$name**: Apelido para a rota
 
 * **Routes::delete**(string **$route**, string **$name**): _**void**_
 
-    * **$route**: Rota
+    * **$route**: Caminho da rota
     * **$name**: Apelido para a rota
 
 ## Criando uma classe gerente do Router
