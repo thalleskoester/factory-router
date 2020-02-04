@@ -20,28 +20,26 @@ abstract class Routes
      *
      * @var Router
      */
-    private $_router;
+    private $router;
     
     /**
      * Controller name
      *
      * @var string
      */
-    private $_controller;
+    private $controller;
     
     
     /**
      * Routes constructor.
      *
-     * @param Router $router    Router object
-     * @param string $className Child class name
+     * @param Router $router         Router object
+     * @param string $controllerName Controller name
      */
-    public function __construct(Router $router, string $className)
+    public function __construct(Router $router, string $controllerName)
     {
-        $this->_router = $router;
-        
-        $buf = explode('\\', $className);
-        $this->_controller = end($buf);
+        $this->router = $router;
+        $this->controller = $controllerName;
     }
     
     /**
@@ -49,10 +47,8 @@ abstract class Routes
      *
      * @return Router
      */
-    public function updateRouter(): Router
-    {
-        return $this->_router;
-    }
+    abstract public function updateRouter(): Router;
+    
     
     /**
      * Modify the defined namespace
@@ -63,7 +59,7 @@ abstract class Routes
      */
     public function namespace(?string $ns): Routes
     {
-        $this->_router->namespace($ns);
+        $this->router->namespace($ns);
         return $this;
     }
     
@@ -76,8 +72,8 @@ abstract class Routes
      */
     public function group(?string $group): Router
     {
-        $this->_router->group($group);
-        return $this->_router;
+        $this->router->group($group);
+        return $this->router;
     }
     
     /**
@@ -90,10 +86,10 @@ abstract class Routes
      */
     public function get(string $route, string $name): void
     {
-        $this->_router->get(
+        $this->router->get(
             $route,
-            $this->_getHandler($name),
-            $this->_getName($name)
+            $this->getHandler($name),
+            $this->getName($name)
         );
         return;
     }
@@ -108,10 +104,10 @@ abstract class Routes
      */
     public function post(string $route, string $name): void
     {
-        $this->_router->post(
+        $this->router->post(
             $route,
-            $this->_getHandler($name),
-            $this->_getName($name)
+            $this->getHandler($name),
+            $this->getName($name)
         );
         return;
     }
@@ -126,10 +122,10 @@ abstract class Routes
      */
     public function put(string $route, string $name): void
     {
-        $this->_router->put(
+        $this->router->put(
             $route,
-            $this->_getHandler($name),
-            $this->_getName($name)
+            $this->getHandler($name),
+            $this->getName($name)
         );
         return;
     }
@@ -144,10 +140,10 @@ abstract class Routes
      */
     public function delete(string $route, string $name): void
     {
-        $this->_router->delete(
+        $this->router->delete(
             $route,
-            $this->_getHandler($name),
-            $this->_getName($name)
+            $this->getHandler($name),
+            $this->getName($name)
         );
         return;
     }
@@ -159,9 +155,9 @@ abstract class Routes
      *
      * @return string
      */
-    private function _getHandler(string $name): string
+    private function getHandler(string $name): string
     {
-        $controller = ucfirst($this->_controller);
+        $controller = ucfirst($this->controller);
         return "{$controller}:{$name}";
     }
     
@@ -172,9 +168,9 @@ abstract class Routes
      *
      * @return string
      */
-    private function _getName(string $name): string
+    private function getName(string $name): string
     {
-        $controller = strtolower($this->_controller);
+        $controller = strtolower($this->controller);
         return "{$controller}.{$name}";
     }
 }
