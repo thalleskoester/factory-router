@@ -20,7 +20,7 @@ abstract class Routes
      *
      * @var Router
      */
-    private $router;
+    protected $router;
     
     /**
      * Controller name
