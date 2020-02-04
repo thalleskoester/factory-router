@@ -8,8 +8,8 @@ use Controllers\Controller;
 /**
  * Factory Router | Class Auth [ EXAMPLE ]
  *
- * @category FactoryRouter\Examples\Controllers
- * @package  Routes
+ * @category Examples\Controllers
+ * @package  FactoryRouter\Examples\Controllers
  * @author   Thalles D. koester <thallesdella@gmail.com>
  * @license  https://choosealicense.com/licenses/mit/ MIT
  * @link     https://github.com/thallesdella/factory-router
@@ -24,7 +24,6 @@ class Auth extends Controller
     public function __construct(Router $router)
     {
         parent::__construct($router);
-        session_start();
     }
     
     public function login(): void
@@ -33,7 +32,10 @@ class Auth extends Controller
         $pass = filter_input(INPUT_POST, 'pass', FILTER_DEFAULT);
         
         if ($user != 'admin' || $pass != 'admin') {
-            $this->router->redirect('website.login');
+            $this->router->redirect(
+                'website.login',
+                ['msg' => 'Credenciais erradas']
+            );
             return;
         }
         
