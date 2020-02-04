@@ -16,7 +16,7 @@ use CoffeeCode\Router\Router;
 class Website extends Controller
 {
     /**
-     * Website constructor.
+     * main constructor.
      *
      * @param Router $router
      */
@@ -28,7 +28,7 @@ class Website extends Controller
     /**
      * @return void
      */
-    public function home(): void
+    public function home(?array $data): void
     {
         $action = $this->router->route('website.login');
         $html = "<a title='Fazer Login' href='{$action}'>Fazer Login</a>";
@@ -42,20 +42,27 @@ class Website extends Controller
      */
     public function login(?array $data): void
     {
-        if (isset($_SESSION['login']) || $_SESSION['login'] == true) {
+        if (isset($_SESSION['login']) && $_SESSION['login'] == true) {
             $this->router->redirect('app.home');
         }
     
         $html = '';
-        $msg = filter_var(($data['msg'] ?? ''), FILTER_SANITIZE_STRIPPED);
-        if (!empty($msg)) {
-            $html .= "{$msg}<br><br>";
+        if (!empty($data['msg'])) {
+            $cleanMsg = filter_var(
+                base64_decode($data['msg']),
+                FILTER_SANITIZE_STRIPPED
+            );
+            $html .= "{$cleanMsg}<br><br>";
         }
         
         $action = $this->router->route('auth.login');
-        $html .= "<form action='{$action}'>
-            <label><span>User:</span><input type='text' name='user' required></label>
-            <label><span>Pass:</span><input type='password' name='pass' required></label>
+        $html .= "<form action='{$action}' method='post'>
+            <label>
+                <span>User:</span><input type='text' name='user' required>
+            </label><br>
+            <label>
+                <span>Pass:</span><input type='password' name='pass' required>
+            </label><br>
             <button>Submit</button></form>";
         
         echo $html;

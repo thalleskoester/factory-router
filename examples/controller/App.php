@@ -16,7 +16,7 @@ use CoffeeCode\Router\Router;
 class App extends Controller
 {
     /**
-     * Website constructor.
+     * main constructor.
      *
      * @param Router $router
      */
@@ -45,9 +45,10 @@ class App extends Controller
     public function logout(): void
     {
         $_SESSION['login'] = false;
+        $message = base64_encode('Logout realizado com sucesso');
         $this->router->redirect(
-            'website.login',
-            ['msg' => 'Logout realizado com sucesso']
+            'website.login.msg',
+            ['msg' => $message]
         );
     }
 }

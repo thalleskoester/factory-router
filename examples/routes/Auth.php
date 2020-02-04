@@ -24,6 +24,7 @@ class Auth extends Routes
     public function __construct(Router $router)
     {
         parent::__construct($router, 'Auth');
+        $this->namespace('Controllers\Auth');
     }
     
     /**
@@ -33,7 +34,7 @@ class Auth extends Routes
     {
         $this->group('auth');
     
-        $this->get('/login', 'login');
+        $this->post('/login', 'login');
         
         return $this->router;
     }

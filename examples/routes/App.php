@@ -6,7 +6,7 @@ use CoffeeCode\Router\Router;
 use ThallesDella\FactoryRouter\Routes;
 
 /**
- * Factory Router | Class Website [ EXAMPLE ]
+ * Factory Router | Class main [ EXAMPLE ]
  *
  * @category FactoryRouter\Examples\Routes
  * @package  Routes

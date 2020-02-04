@@ -17,7 +17,7 @@ use Controllers\Controller;
 class Auth extends Controller
 {
     /**
-     * Website constructor.
+     * main constructor.
      *
      * @param Router $router
      */
@@ -26,19 +26,20 @@ class Auth extends Controller
         parent::__construct($router);
     }
     
-    public function login(): void
+    public function login(array $data): void
     {
-        $user = filter_input(INPUT_POST, 'user', FILTER_DEFAULT);
-        $pass = filter_input(INPUT_POST, 'pass', FILTER_DEFAULT);
-        
-        if ($user != 'admin' || $pass != 'admin') {
+        $data = filter_var_array($data, FILTER_DEFAULT);
+    
+        if ($data['user'] != 'admin' || $data['pass'] != 'admin') {
+            $message = base64_encode('Credenciais erradas');
             $this->router->redirect(
-                'website.login',
-                ['msg' => 'Credenciais erradas']
+                'website.login.msg',
+                ['msg' => $message]
             );
             return;
         }
         
         $_SESSION['login'] = true;
+        $this->router->redirect('app.home');
     }
 }

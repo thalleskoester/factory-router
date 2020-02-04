@@ -6,7 +6,7 @@ use CoffeeCode\Router\Router;
 use ThallesDella\FactoryRouter\Routes;
 
 /**
- * Factory Router | Class Website [ EXAMPLE ]
+ * Factory Router | Class AAA [ EXAMPLE ]
  *
  * @category Examples\Routes
  * @package  FactoryRouter\Examples\Routes
@@ -14,16 +14,17 @@ use ThallesDella\FactoryRouter\Routes;
  * @license  https://choosealicense.com/licenses/mit/ MIT
  * @link     https://github.com/thallesdella/factory-router
  */
-class Website extends Routes
+class AAA extends Routes
 {
     /**
-     * Website constructor.
+     * main constructor.
      *
      * @param Router $router Router object
      */
     public function __construct(Router $router)
     {
         parent::__construct($router, 'Website');
+        $this->namespace('Controllers');
     }
     
     /**
@@ -81,7 +82,7 @@ class Website extends Routes
         $this->group('me');
     
         $this->get("/", "login");
-        $this->get("/{msg}", "login");
+        $this->router->get('/{msg}', "Website:login", "website.login.msg");
         
         $this->get("/registrar", "register");
         $this->get("/recuperar", "forget");
@@ -93,6 +94,7 @@ class Website extends Routes
      */
     private function error(): void
     {
-        $this->get('/error/{code}', 'error');
+        $this->group('error');
+        $this->get('/{code}', 'error');
     }
 }
