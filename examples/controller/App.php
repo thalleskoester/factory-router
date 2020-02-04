@@ -7,8 +7,8 @@ use CoffeeCode\Router\Router;
 /**
  * Factory Router | Class App [ EXAMPLE ]
  *
- * @category FactoryRouter\Examples\Controllers
- * @package  Routes
+ * @category Examples\Controllers
+ * @package  FactoryRouter\Examples\Controllers
  * @author   Thalles D. koester <thallesdella@gmail.com>
  * @license  https://choosealicense.com/licenses/mit/ MIT
  * @link     https://github.com/thallesdella/factory-router
@@ -23,7 +23,6 @@ class App extends Controller
     public function __construct(Router $router)
     {
         parent::__construct($router);
-        session_start();
         
         if (!isset($_SESSION['login']) || $_SESSION['login'] != true) {
             $this->router->redirect('website.login');
@@ -46,7 +45,10 @@ class App extends Controller
     public function logout(): void
     {
         $_SESSION['login'] = false;
-        $this->router->redirect('website.login');
+        $this->router->redirect(
+            'website.login',
+            ['msg' => 'Logout realizado com sucesso']
+        );
     }
 }
     
