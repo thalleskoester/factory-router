@@ -25,27 +25,37 @@ class FactoryRouter
      *
      * @var Router
      */
-    private $_router;
+    private $router;
     
     /**
      * Target ArrayObject
      *
      * @var ArrayObject
      */
-    private $_target;
+    private $target;
+    
+    /**
+     * Project root folder
+     *
+     * @var string
+     */
+    private $project_root;
     
     /**
      * FactoryRouter constructor.
      *
-     * @param string $projectUrl Base url of project
-     * @param string $namespace  Default namespace of the controllers
+     * @param string $projectUrl  Base url of project
+     * @param string $projectRoot Path to the project root folder
+     * @param string $namespace   Default namespace of the controllers
      */
-    public function __construct(string $projectUrl, string $namespace)
+    public function __construct(string $projectUrl, string $projectRoot, string $namespace)
     {
-        $this->_router = new Router($projectUrl);
-        $this->_router->namespace($namespace);
-        
-        $this->_target = new ArrayObject();
+        $this->router = new Router($projectUrl);
+        $this->router->namespace($namespace);
+    
+        $this->project_root = $projectRoot;
+    
+        $this->target = new ArrayObject();
     }
     
     /**
@@ -62,7 +72,7 @@ class FactoryRouter
      */
     public function addDir(string $dir): FactoryRouter
     {
-        $path = dirname(__DIR__, 2) . "/{$dir}";
+        $path = "{$this->project_root}/{$dir}";
         if (!file_exists($dir) || !is_dir($dir)) {
             $error = new DirectoryNotFoundException('Directory not found');
             $error->file = $dir;
@@ -93,12 +103,14 @@ class FactoryRouter
      */
     public function addFile(string $file): FactoryRouter
     {
-        $arr = [
-            "filename" => $this->_getFileName($file),
-            "handler" => $this->_pathToNamespace($file),
-            "path" => dirname(__DIR__, 2) . "/{$file}"
-        ];
-        $fileInfo = new ArrayObject($arr, ArrayObject::ARRAY_AS_PROPS);
+        $fileInfo = new ArrayObject(
+            [
+                "filename" => $this->getFileName($file),
+                "handler" => $this->pathToNamespace($file),
+                "path" => "{$this->project_root}/{$file}"
+            ],
+            ArrayObject::ARRAY_AS_PROPS
+        );
         
         if (!file_exists($fileInfo->path) || !is_file($fileInfo->path)) {
             $error = new FileNotFoundException('File not found');
@@ -106,9 +118,9 @@ class FactoryRouter
             throw $error;
         }
         include_once $fileInfo->path;
-        
-        $this->_checkClass($fileInfo);
-        $this->_target->append([$fileInfo]);
+    
+        $this->checkClass($fileInfo);
+        $this->target->append([$fileInfo]);
         return $this;
     }
     
@@ -119,16 +131,16 @@ class FactoryRouter
      */
     public function build(): Router
     {
-        foreach ($this->_target->getIterator() as $file) {
+        foreach ($this->target->getIterator() as $file) {
             /**
              * Instance of the router manager
              *
              * @var Routes $routes
              */
-            $routes = new $file->handler($this->_router);
+            $routes = new $file->handler($this->router);
             $routes->updateRouter();
         }
-        return $this->_router;
+        return $this->router;
     }
     
     /**
@@ -141,7 +153,7 @@ class FactoryRouter
      * @throws ClassNotFoundException
      * @throws UpdateRouterMissingMethodException
      */
-    private function _checkClass(ArrayObject $fileInfo): void
+    private function checkClass(ArrayObject $fileInfo): void
     {
         if (!class_exists($fileInfo->handler)) {
             $error = new ClassNotFoundException("Class not found");
@@ -165,10 +177,10 @@ class FactoryRouter
      *
      * @return string
      */
-    private function _pathToNamespace(string $path): string
+    private function pathToNamespace(string $path): string
     {
-        $buf = str_replace('/', '\\', ucwords($path, '/'));
-        return explode('.', $buf)[0];
+        $buffer = str_replace('/', '\\', ucwords($path, '/'));
+        return explode('.', $buffer)[0];
     }
     
     /**
@@ -178,10 +190,10 @@ class FactoryRouter
      *
      * @return string
      */
-    private function _getFileName(string $path): string
+    private function getFileName(string $path): string
     {
-        $arr = explode('/', $path);
-        $file = end($arr);
+        $array = explode('/', $path);
+        $file = end($array);
         return explode('.', $file)[0];
     }
     
