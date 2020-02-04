@@ -23,9 +23,7 @@ class Auth extends Routes
      */
     public function __construct(Router $router)
     {
-        $pieces = explode('\\', __CLASS__);
-        $controller = end($pieces);
-        parent::__construct($router, $controller);
+        parent::__construct($router, 'Auth');
     }
     
     /**
@@ -33,6 +31,10 @@ class Auth extends Routes
      */
     public function updateRouter(): Router
     {
+        $this->group('auth');
+    
+        $this->get('/login', 'login');
+        
         return $this->router;
     }
 }

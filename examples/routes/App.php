@@ -23,9 +23,7 @@ class App extends Routes
      */
     public function __construct(Router $router)
     {
-        $pieces = explode('\\', __CLASS__);
-        $controller = end($pieces);
-        parent::__construct($router, $controller);
+        parent::__construct($router, 'App');
     }
     
     /**
@@ -33,6 +31,18 @@ class App extends Routes
      */
     public function updateRouter(): Router
     {
+        $this->appRoutes();
         return $this->router;
+    }
+    
+    /**
+     * @return void
+     */
+    private function appRoutes(): void
+    {
+        $this->group('app');
+        
+        $this->get('/', 'home');
+        $this->get('/logout', 'logout');
     }
 }

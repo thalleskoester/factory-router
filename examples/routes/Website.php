@@ -8,8 +8,8 @@ use ThallesDella\FactoryRouter\Routes;
 /**
  * Factory Router | Class Website [ EXAMPLE ]
  *
- * @category FactoryRouter\Examples\Routes
- * @package  Routes
+ * @category Examples\Routes
+ * @package  FactoryRouter\Examples\Routes
  * @author   Thalles D. koester <thallesdella@gmail.com>
  * @license  https://choosealicense.com/licenses/mit/ MIT
  * @link     https://github.com/thallesdella/factory-router
@@ -23,9 +23,7 @@ class Website extends Routes
      */
     public function __construct(Router $router)
     {
-        $pieces = explode('\\', __CLASS__);
-        $controller = end($pieces);
-        parent::__construct($router, $controller);
+        parent::__construct($router, 'Website');
     }
     
     /**
@@ -47,6 +45,7 @@ class Website extends Routes
     private function main(): void
     {
         $this->group(null);
+    
         $this->get("/", "home");
         $this->get("/{search}", "search");
         $this->get("/contato", "contact");
@@ -58,6 +57,7 @@ class Website extends Routes
     private function categories(): void
     {
         $this->group('cat');
+    
         $this->get("/", "categories");
         $this->get("/{cat_name}", "category");
     }
@@ -68,6 +68,7 @@ class Website extends Routes
     private function posts(): void
     {
         $this->group('posts');
+    
         $this->get("/", "posts");
         $this->get("/{post_name}", "post");
     }
@@ -78,7 +79,10 @@ class Website extends Routes
     private function user(): void
     {
         $this->group('me');
+    
         $this->get("/", "login");
+        $this->get("/{msg}", "login");
+        
         $this->get("/registrar", "register");
         $this->get("/recuperar", "forget");
         $this->get("/resetar", "reset");
