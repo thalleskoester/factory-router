@@ -11,7 +11,7 @@
 
 
 Factory Router é um componente simples, que te ajuda na criação das rotas do seu sistema. Utilizando o motor de rotas
- Router, ele roteia o gerenciamento das rotas para alguma classe a sua escolha. 
+ [Router](https://github.com/robsonvleite/router), ele roteia o gerenciamento das rotas para alguma classe a sua escolha. 
 
 
 ### Destaques
@@ -36,91 +36,37 @@ composer require thallesdella/factory-router
 
 ## Documentação
 
-### Construindo objeto
+### FactoryRouter
+#### Construindo objeto
 
-* **FactoryRouter::class**(string **$projectUrl**, string **$namespace**)
+* **FactoryRouter::class**(string **$projectUrl**, string **$projectRoot**, string **$namespace**)
 
     * **$projectUrl**: Url base do projeto
+    * **$projectRoot**: Caminho para a raiz do projeto
     * **$namespace**: Namespace padrão dos controllers
-    
-```php
-$factory = new FactoryRouter('http://exemple.com.br', 'Source\Controllers');
-```
 
 _OBS: O namespace pode ser alterado durante a execução._
 
-### Adicionando arquivo ou pasta
+#### Adicionando arquivo ou pasta
 
 * **FactoryRouter::addFile**(string **$file**): _**FactoryRouter**_
 
-    * **$file**: Url base do projeto
-    
-```php
-$factory = new FactoryRouter('http://exemple.com.br', 'Source\Controllers');
-
-try{
-    $factory->addFile('widgets/cart/routes.php');
-} catch (ClassNotFoundException $e){
- 
-} catch (UpdateRouterMissingMethodException $e){
-   
-} catch (FileNotFoundException $e){
-    
-}
-```
+    * **$file**: Caminho do arquivo referente a raiz do projeto
 
 * **FactoryRouter::addDir**(string **$dir**): _**FactoryRouter**_
 
-    * **$dir**: Url base do projeto
-    
-```php
-$factory = new FactoryRouter('http://exemple.com.br', 'Source\Controllers');
+    * **$dir**: Caminho do diretório referente a raiz do projeto
 
-try{
-    $factory->addDir('routes');
-} catch (ClassNotFoundException $e){
- 
-} catch (UpdateRouterMissingMethodException $e){
-  
-} catch (DirectoryNotFoundException $e){
-   
-} catch (FileNotFoundException $e){
-    
-}
-```
-
-### Obtendo objeto Router
+#### Obtendo objeto Router
 
 * **FactoryRouter::build**(): _**Router**_
 
-```php
-$factory = new FactoryRouter('http://exemple.com.br', 'Source\Controllers');
+### Routes
 
-try{
-    $factory->addDir('routes');
-} catch (ClassNotFoundException $e){
- 
-} catch (UpdateRouterMissingMethodException $e){
-  
-} catch (DirectoryNotFoundException $e){
-   
-} catch (FileNotFoundException $e){
-    
-}
-
-$router = $factory->build();
-```
-
-### Criando uma classe gerente do Router
-
-Crie uma classe e extenda ela a classe Routes
-
-* **Routes::class**(Router $router, string $className)
+* **Routes::class**(Router **$router**, string **$controllerName**)
 
     * **$router**: objeto Router
-    * **$className**: Nome da classe filha
-
-* **Routes::updateRouter**(): _**Router**_
+    * **$controllerName**: Nome do controller
 
 * **Routes::namespace**(?string **$ns**): _**Routes**_
 
@@ -130,78 +76,46 @@ Crie uma classe e extenda ela a classe Routes
 
     * **$group**: Nome do grupo
 
-* **Routes::get**(string **$route**, string **$name**)
+* **Routes::get**(string **$route**, string **$name**): _**void**_
 
-    * **$route**: Rota
+    * **$route**: Caminho da rota
     * **$name**: Apelido para a rota
 
-* **Routes::post**(string **$route**, string **$name**)
+* **Routes::post**(string **$route**, string **$name**): _**void**_
 
-    * **$route**: Rota
+    * **$route**: Caminho da rota
     * **$name**: Apelido para a rota
 
-* **Routes::put**(string **$route**, string **$name**)
+* **Routes::put**(string **$route**, string **$name**): _**void**_
 
-    * **$route**: Rota
+    * **$route**: Caminho da rota
     * **$name**: Apelido para a rota
 
-* **Routes::delete**(string **$route**, string **$name**)
+* **Routes::delete**(string **$route**, string **$name**): _**void**_
 
-    * **$route**: Rota
+    * **$route**: Caminho da rota
     * **$name**: Apelido para a rota
+
+## Criando uma classe gerente do Router
+
+Crie uma classe e extenda ela a classe Routes. 
 
 ```php
-namespace Routes\
+use CoffeeCode\Router\Router;
+use ThallesDella\FactoryRouter\Routes;
 
-use ThallesDella\Routes
-
-class Blog extends Routes
+class Foo extends Routes
 {
-    public function __construct(Router $router)
-    {
-        parent::__construct($router, __CLASS__);
-    }
-    
-    public function updateRouter(): Router
-    {
-        $this->web();
-        $this->categories();
-        $this->posts();
-        $this->user();
-        return parent::updateRouter();
-    }
-    
-    private function web(): void
-    {
-        $this->group(null);
-        $this->get("/", "home");
-        $this->get("/{search}", "search");
-        $this->get("/contato", "contact");
-    }
-    
-    private function categories(): void
-    {
-        $this->group('cat');
-        $this->get("/", "categories");
-        $this->get("/{cat_name}", "category");
-    }
-    
-    private function posts(): void
-    {
-        $this->group('posts');
-        $this->get("/", "posts");
-        $this->get("/{post_name}", "post");
-    }
-    
-    private function user(): void
-    {
-        $this->group('me');
-        $this->get("/", "login");
-        $this->get("/registrar", "register");
-        $this->get("/recuperar", "forget");
-        $this->get("/resetar", "reset");
+    public function __contruct(Router $router){
+        parent::__construct($router, 'Bar');
     }
 }
+```
+
+Um método, com nome de updateRouter, deverá ser criado com a seguinte assinatura:
+
+```php
+public function updateRouter(): Router;
 ```
 
 Para mais detalhes sobre como usar, veja na pasta de exemplos no diretório do componente. 

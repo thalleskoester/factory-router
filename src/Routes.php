@@ -16,143 +16,161 @@ use CoffeeCode\Router\Router;
 abstract class Routes
 {
     /**
+     * Router Object
+     *
      * @var Router
      */
-    private $_router;
+    protected $router;
     
     /**
+     * Controller name
+     *
      * @var string
      */
-    private $_controller;
+    private $controller;
     
     
     /**
      * Routes constructor.
      *
-     * @param Router $router
-     * @param string $className
+     * @param Router $router         Router object
+     * @param string $controllerName Controller name
      */
-    public function __construct(Router $router, string $className)
+    public function __construct(Router $router, string $controllerName)
     {
-        $this->_router = $router;
-        
-        $buf = explode('\\', $className);
-        $this->_controller = end($buf);
+        $this->router = $router;
+        $this->controller = $controllerName;
     }
     
     /**
+     * Update router object
+     *
      * @return Router
      */
-    public function updateRouter(): Router
-    {
-        return $this->_router;
-    }
+    abstract public function updateRouter(): Router;
+    
     
     /**
-     * @param string|null $ns
+     * Modify the defined namespace
+     *
+     * @param string|null $ns New namespace
      *
      * @return Routes
      */
     public function namespace(?string $ns): Routes
     {
-        $this->_router->namespace($ns);
+        $this->router->namespace($ns);
         return $this;
     }
     
     /**
-     * @param string|null $group
+     * Define a routes group
+     *
+     * @param string|null $group Name of the group
      *
      * @return Router
      */
     public function group(?string $group): Router
     {
-        $this->_router->group($group);
-        return $this->_router;
+        $this->router->group($group);
+        return $this->router;
     }
     
     /**
-     * @param string $route
-     * @param string $name
+     * Define a method get route
+     *
+     * @param string $route Route
+     * @param string $name  Nickname to the route
      *
      * @return void
      */
     public function get(string $route, string $name): void
     {
-        $this->_router->get(
+        $this->router->get(
             $route,
-            $this->_getHandler($name),
-            $this->_getName($name)
+            $this->getHandler($name),
+            $this->getName($name)
         );
         return;
     }
     
     /**
-     * @param string $route
-     * @param string $name
+     * Define a method post route
+     *
+     * @param string $route Route
+     * @param string $name  Nickname to the route
      *
      * @return void
      */
     public function post(string $route, string $name): void
     {
-        $this->_router->post(
+        $this->router->post(
             $route,
-            $this->_getHandler($name),
-            $this->_getName($name)
+            $this->getHandler($name),
+            $this->getName($name)
         );
         return;
     }
     
     /**
-     * @param string $route
-     * @param string $name
+     * Define a method put route
+     *
+     * @param string $route Route
+     * @param string $name  Nickname to the route
      *
      * @return void
      */
     public function put(string $route, string $name): void
     {
-        $this->_router->put(
+        $this->router->put(
             $route,
-            $this->_getHandler($name),
-            $this->_getName($name)
+            $this->getHandler($name),
+            $this->getName($name)
         );
         return;
     }
     
     /**
-     * @param string $route
-     * @param string $name
+     * Define a method delete route
+     *
+     * @param string $route Route
+     * @param string $name  Nickname to the route
      *
      * @return void
      */
     public function delete(string $route, string $name): void
     {
-        $this->_router->delete(
+        $this->router->delete(
             $route,
-            $this->_getHandler($name),
-            $this->_getName($name)
+            $this->getHandler($name),
+            $this->getName($name)
         );
         return;
     }
     
     /**
-     * @param string $name
+     * Get handler for the route
+     *
+     * @param string $name Nickname of the route
      *
      * @return string
      */
-    private function _getHandler(string $name): string
+    private function getHandler(string $name): string
     {
-        $controller = ucfirst($this->_controller);
+        $controller = ucfirst($this->controller);
         return "{$controller}:{$name}";
     }
     
     /**
-     * @param string $name
+     * Get name for the route
+     *
+     * @param string $name Nickname of the route
      *
      * @return string
      */
-    private function _getName(string $name): string
+    private function getName(string $name): string
     {
-        $controller = strtolower($this->_controller);
+        $controller = strtolower($this->controller);
         return "{$controller}.{$name}";
     }
 }
