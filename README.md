@@ -151,9 +151,9 @@ Crie uma classe e extenda ela a classe Routes
     * **$name**: Apelido para a rota
 
 ```php
-namespace Routes\
+namespace Routes;
 
-use ThallesDella\Routes
+use ThallesDella\FactoryRouter\Routes;
 
 class Blog extends Routes
 {
