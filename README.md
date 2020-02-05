@@ -25,7 +25,7 @@ Factory Router é um componente simples, que te ajuda na criação das rotas do 
 Factory Router esta disponível atraves do composer:
 
 ```bash
-"thallesdella/factory-router": "^1.2"
+"thallesdella/factory-router": "^2.0.*"
 ```
 
 Ou execute
