@@ -29,7 +29,7 @@
   },
   "require": {
     "php": "^7.3",
-    "coffeecode/router": "1.0.7"
+    "coffeecode/router": "1.0.8"
   },
   "require-dev": {
     "phpunit/phpunit": "9.0.0",
